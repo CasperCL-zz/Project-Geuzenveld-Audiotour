@@ -34,4 +34,14 @@ public class SplashActivity extends Activity {
 		};
 		timer.start();
 	}
+	
+	
+	/**
+	 * Make sure we do not show this view again when we hit the back button.
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		finish();
+	}
 }
