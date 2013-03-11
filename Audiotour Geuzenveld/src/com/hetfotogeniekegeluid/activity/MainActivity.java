@@ -66,8 +66,8 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 
 		// Check for GPS
 		checkForGPS();
-		// Load the predefined locations
-		locationStore.loadLocationStore();
+		// Load the predefined locations (Still needs some fixing)
+//		locationStore.loadLocationStore();
 
 		// Move the map to the view
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.380498,
