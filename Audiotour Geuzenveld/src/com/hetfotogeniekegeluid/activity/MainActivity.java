@@ -1,7 +1,5 @@
 package com.hetfotogeniekegeluid.activity;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -38,12 +36,10 @@ import com.hetfotogeniekegeluid.model.MenuItems;
  */
 public class MainActivity extends FragmentActivity implements LocationListener {
 
-	static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-	static final LatLng KIEL = new LatLng(53.551, 9.993);
 	private GoogleMap map;
-	private ArrayList<OverlayItem> mapOverlays = new ArrayList<OverlayItem>();
-	private Location myLocation;
+	private ArrayList<Marker> markers;
 	private LocationStore locationStore;
+	private ArrayList<OverlayItem> mapOverlays;
 
 	/**
 	 * This happens on when the application starts.
@@ -52,26 +48,35 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		mapOverlays = new ArrayList<OverlayItem>();
+
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-
-		Marker marker = map.addMarker(new MarkerOptions()
-				.position(KIEL)
-				.title("Kiel")
-				.snippet("Kiel is cool")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.ic_launcher)));
 		locationStore = LocationStore.getInstance();
 
 		// Check for GPS
 		checkForGPS();
 		// Load the predefined locations (Still needs some fixing)
-//		locationStore.loadLocationStore();
+		locationStore.loadLocationStore();
+		createMarkers();
 
 		// Move the map to the view
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.380498,
 				4.802291), 15));
+	}
+
+	private void createMarkers() {
+		for (com.hetfotogeniekegeluid.model.Location location : locationStore
+				.getLocations()) {
+			Marker tmpMarker = map.addMarker(new MarkerOptions()
+												.title(location.getName())
+												.snippet(location.getDescription())
+												.position(location.getLatLng()));
+
+			markers.add(tmpMarker);
+		}
 	}
 
 	/**
@@ -120,14 +125,15 @@ public class MainActivity extends FragmentActivity implements LocationListener {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		
+
 		Intent selectedActivity = null;
-		if(item.getTitle().equals(MenuItems.Colofon.toString())){
-			selectedActivity = new Intent(MainActivity.this, ColofonActivity.class);
+		if (item.getTitle().equals(MenuItems.Colofon.toString())) {
+			selectedActivity = new Intent(MainActivity.this,
+					ColofonActivity.class);
 		}
 
 		startActivity(selectedActivity);

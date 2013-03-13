@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -39,24 +42,30 @@ public class LocationStore {
 	 */
 	public void loadLocationStore() {
 		locations.clear(); // make the list empty
-		
+
 		Gson gson = new Gson();
-		URL url = getClass().getResource("locations.json");
-		File file = new File(url.getPath());
-		FileReader fr = null;
+		InputStream inputStream = getClass().getResourceAsStream("locations.json");
 		BufferedReader br = null;
-		
+
 		try {
-			fr = new FileReader(file);
-			br = new BufferedReader(fr);
+			br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 			
-			locations.add(gson.fromJson(br, Location.class));
-		} catch (FileNotFoundException e) {
+	        String in;
+	        Location tmpLoc;
+	        while ((in = br.readLine()) != null) {
+	        	tmpLoc = gson.fromJson(in, Location.class);
+	        	locations.add(tmpLoc);
+	        }
+
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
-				if (fr != null) {
+				if (inputStream != null) {
 					br.close();
 				}
 			} catch (IOException ex) {
