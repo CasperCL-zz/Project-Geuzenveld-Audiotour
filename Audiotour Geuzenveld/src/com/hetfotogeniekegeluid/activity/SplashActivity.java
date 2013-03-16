@@ -28,7 +28,7 @@ public class SplashActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Intent mainActivity = new Intent(SplashActivity.this, MainActivity.class);
+				Intent mainActivity = new Intent(SplashActivity.this, MenuActivity.class);
 				startActivity(mainActivity);
 			}
 		};

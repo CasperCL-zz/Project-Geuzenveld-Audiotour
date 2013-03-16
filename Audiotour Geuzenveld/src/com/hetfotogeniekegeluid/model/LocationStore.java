@@ -11,51 +11,47 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
+
 import com.google.gson.Gson;
 
 public class LocationStore {
 	private ArrayList<Location> locations;
+	private ArrayList<Site> sites;
 	private static LocationStore locationStore;
 
 	private LocationStore() {
 		locations = new ArrayList<Location>();
-	}
-
-	public ArrayList<Location> getLocations() {
-		return locations;
-	}
-
-	public void setLocations(ArrayList<Location> locations) {
-		this.locations = locations;
-	}
-
-	public void getLocation(int locationIndex) {
-
-	}
-
-	public void readLocations() {
-
+		sites = new ArrayList<Site>();
 	}
 
 	/**
 	 * Loads all the data into the application
 	 */
-	public void loadLocationStore() {
+	public void loadLocationStore(Activity context) {
 		locations.clear(); // make the list empty
 
 		Gson gson = new Gson();
-		InputStream inputStream = getClass().getResourceAsStream("locations.json");
+		InputStream is = null;
 		BufferedReader br = null;
 
 		try {
-			br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-			
-	        String in;
-	        Location tmpLoc;
-	        while ((in = br.readLine()) != null) {
-	        	tmpLoc = gson.fromJson(in, Location.class);
-	        	locations.add(tmpLoc);
-	        }
+			is = context.getAssets().open("location/locations.json");
+			br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+			String in;
+			Site tmpSite;
+			while ((in = br.readLine()) != null) {
+				tmpSite = gson.fromJson(in, Site.class);
+
+				// If it is a location, mark it for setting the marker later on
+				if (tmpSite.isASite())
+					sites.add(tmpSite);
+				// Add the Location (which can also be a Site) to the locations
+				// list so a route can be drawn.
+				locations.add(tmpSite);
+			}
 
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -65,7 +61,7 @@ public class LocationStore {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (inputStream != null) {
+				if (is != null) {
 					br.close();
 				}
 			} catch (IOException ex) {
@@ -79,5 +75,13 @@ public class LocationStore {
 		if (locationStore == null)
 			locationStore = new LocationStore();
 		return locationStore;
+	}
+
+	public ArrayList<Site> getSites() {
+		return sites;
+	}
+
+	public ArrayList<Location> getLocations() {
+		return locations;
 	}
 }
