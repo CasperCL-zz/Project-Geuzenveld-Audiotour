@@ -12,6 +12,7 @@
         android:name="com.test.mapsv2.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
+    <!--
     <uses-permission android:name="com.test.mapsv2.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,6 +20,19 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    -->
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!--
+     The following two permissions are not required to use
+     Google Maps Android API v2, but are recommended.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -26,6 +40,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="com.hetfotogeniekegeluid.model.ApplicationStatus"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -39,13 +54,21 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         </activity>
-        
         <activity
             android:name="com.hetfotogeniekegeluid.activity.MenuActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         </activity>
-        
+        <activity
+            android:name="com.hetfotogeniekegeluid.activity.InstructionMenuActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.hetfotogeniekegeluid.activity.DelenActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
         <activity
             android:name="com.hetfotogeniekegeluid.activity.SplashActivity"
             android:label="@string/app_name"
@@ -56,10 +79,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyD4lstajAF72hxNU31R64vk7DWsqG819Hc" /> <!-- Debug code -->
-    </application>
+        <service 
+            android:name="com.hetfotogeniekegeluid.model.AudioService"
+            android:enabled="true" />
+        <service
+            android:name="com.hetfotogeniekegeluid.model.LocationUpdateService"
+            android:enabled="true" />
+
+    
+            <meta-data
+                android:name="com.google.android.maps.v2.API_KEY"
+                android:value="AIzaSyD4lstajAF72hxNU31R64vk7DWsqG819Hc" /> <!-- Debug code -->
+        </application>
 
 </manifest>

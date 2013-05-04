@@ -2,32 +2,45 @@ package com.hetfotogeniekegeluid.activity;
 
 import java.util.ArrayList;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.content.ServiceConnection;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -38,8 +51,12 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.maps.OverlayItem;
 import com.hetfotogeniekegeluid.R;
+import com.hetfotogeniekegeluid.model.ApplicationStatus;
 import com.hetfotogeniekegeluid.model.LocationStore;
+import com.hetfotogeniekegeluid.model.LocationUpdateService;
 import com.hetfotogeniekegeluid.model.MenuItems;
+import com.hetfotogeniekegeluid.model.AudioService;
+import com.hetfotogeniekegeluid.model.AudioService.LocalBinder;
 import com.hetfotogeniekegeluid.model.Site;
 
 /**
@@ -48,12 +65,25 @@ import com.hetfotogeniekegeluid.model.Site;
  * @author Casper
  * 
  */
-public class MapActivity extends FragmentActivity implements LocationListener {
+public class MapActivity extends FragmentActivity implements
+		OnSeekBarChangeListener, OnMapClickListener {
 
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private LocationStore locationStore;
 	private ArrayList<OverlayItem> mapOverlays;
+	private static AudioService myAudioService;
+	private static LocationUpdateService mLocationUpdateService;
+	private static SeekBar mSeekBar;
+	private static Button mPausePlay;
+	private static Handler mHandler = new Handler();
+	private static Handler mHandler2 = new Handler();
+	private static boolean updateBar = true;
+	private static boolean ppclicked = false;
+	private static View barPosition;
+	private boolean barVisible = false;
+	private static TextView durationText;
+	private static boolean checkedForGPS = false;
 
 	/**
 	 * This happens on when the application starts.
@@ -61,28 +91,158 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ApplicationStatus.setContext(this);
 		setContentView(R.layout.activity_map);
 
+		// Check for internet for the map
+		if (checkInternet()) {
+			// Check for GPS
+			if (!checkedForGPS) {
+				checkForGPS();
+				checkedForGPS = true;
+			}
+			createMap();
+
+			// Start the audio service
+
+			if (myAudioService == null) {
+				Intent audioService = new Intent(this, AudioService.class);
+				startService(audioService);
+				bindService(audioService, mConnection, Context.BIND_AUTO_CREATE);
+			} else {
+				// TODO: regain the link to the audio service
+
+			}
+
+			if (!LocationUpdateService.isRunning(this)) {
+				Intent locationUpdateService = new Intent(this,
+						LocationUpdateService.class);
+				startService(locationUpdateService);
+				bindService(locationUpdateService, mLocationConnection,
+						Context.BIND_AUTO_CREATE);
+			}
+
+			setupAudioBar();
+
+			// Move the map to the view
+			if (getIntent().getExtras() != null) {
+				ApplicationStatus.getMapActivity().finish();// finish the
+															// previous map
+															// activity in order
+															// to prevent
+															// multiple
+															// mapactivities.
+				ApplicationStatus.setMapActivity(this);
+				Location loc = (Location) getIntent().getExtras().get(
+						"specific_zoom_location");
+
+				Log.w("ZOOM_TEST", "Location lat: " + loc.getLatitude()
+						+ " long: " + loc.getLongitude());
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+						new LatLng(loc.getLatitude(), loc.getLongitude()), 18));
+			} else {
+				ApplicationStatus.setMapActivity(this);
+				Log.w("ZOOM_TEST", "zooming to default location");
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+						52.380498, 4.802291), 15));
+			}
+		} else {
+			// Show that you need internet to continue and quit to the main menu
+			final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(
+					"U heeft momenteel geen actieve netwerkverbinding. De plattegrond zal niet weergeven worden.")
+					.setCancelable(false);
+			final AlertDialog alert = builder.create();
+			alert.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// Go to previous activity.
+					MapActivity.this.finish();
+				}
+			});
+
+			alert.show();
+		}
+
+	}
+
+	private void setupAudioBar() {
+		// TODO Auto-generated method stub
+		mSeekBar = (SeekBar) findViewById(R.id.seekBar1);
+		mSeekBar.setOnSeekBarChangeListener(this);
+		mPausePlay = (Button) findViewById(R.id.pauseplay);
+		durationText = (TextView) findViewById(R.id.audioText);
+
+		barPosition = (View) findViewById(R.id.audioBar);
+		barPosition.setVisibility(View.INVISIBLE);
+	}
+
+	void addremoveBar() {
+		if (barVisible) {
+			barPosition.startAnimation(AnimationUtils.loadAnimation(this,
+					R.drawable.slideout));
+			barPosition.setVisibility(View.INVISIBLE);
+			barVisible = false;
+		} else {
+			barPosition.startAnimation(AnimationUtils.loadAnimation(this,
+					R.drawable.slidein));
+			barPosition.setVisibility(View.VISIBLE);
+			barVisible = true;
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		// Is it necessary to unbind the service? I guess the service should be
+		// unbound as soon as the app goes down.
+		// if (myAudioService != null) {
+		// unbindService(mConnection);
+		// }
+		//
+		// if (mLocationUpdateService != null)
+		// unbindService(mLocationConnection);
+
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		ApplicationStatus.activityPaused();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		ApplicationStatus.activityResumed();
+	};
+
+	public void audioStart(View v) {
+		myAudioService.startstopAudio();
+		if (ppclicked) {
+			ppclicked = false;
+			mPausePlay.setBackgroundResource(R.drawable.play);
+		} else {
+			ppclicked = true;
+			mPausePlay.setBackgroundResource(R.drawable.pause);
+		}
+	}
+
+	private void createMap() {
 		mapOverlays = new ArrayList<OverlayItem>();
 		markers = new ArrayList<Marker>();
 
-		map = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map);
+		map = mapFragment.getMap();
 		map.setMyLocationEnabled(true);
+		map.setIndoorEnabled(true);
+		map.setOnMapClickListener(this);
+
 		locationStore = LocationStore.getInstance();
 
-		// Check for Internet
-		checkInternet();
-		// Check for GPS
-		checkForGPS();
-		// Load the predefined locations
-		locationStore.loadLocationStore(this);
 		createMarkers();
 		createRoute();
-
-		// Move the map to the view
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.380498,
-				4.802291), 15));
 	}
 
 	/**
@@ -101,7 +261,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 					.getLocations()) {
 				rectOptions.add(location.getLatLng());
 			}
-			rectOptions.color(0xBF5DD49C);// 0x005DD49C
+			rectOptions.color(0xBF3794D3);// 0x005DD49C
 			// 0xff000000
 
 			// add the route to the map
@@ -109,64 +269,6 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 			return true;
 		} else
 			return false;
-	}
-
-	/**
-	 * Checks if internet is available, and if not, displays a message.
-	 */
-	private void checkInternet() {
-		final ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-		if (activeNetwork == null
-				|| activeNetwork.getState() != NetworkInfo.State.CONNECTED) {
-			final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(
-					"U heeft momenteel geen actieve netwerkverbinding. De plattegrond zal niet goed weergeven worden.")
-					.setCancelable(false).setPositiveButton("OK", null);
-			final AlertDialog alert = builder.create();
-			alert.show();
-		}
-	}
-
-	public Bitmap drawTextToBitmap(Context mContext, int resourceId,
-			String mText) {
-		try {
-			Resources resources = mContext.getResources();
-			float scale = resources.getDisplayMetrics().density;
-			Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
-
-			android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
-			// set default bitmap config if none
-			if (bitmapConfig == null) {
-				bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
-			}
-			// resource bitmaps are imutable,
-			// so we need to convert it to mutable one
-			bitmap = bitmap.copy(bitmapConfig, true);
-
-			Canvas canvas = new Canvas(bitmap);
-			// new antialised Paint
-			Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			// text color - #3D3D3D
-			paint.setColor(Color.rgb(110, 110, 110));
-			// text size in pixels
-			paint.setTextSize((int) (12 * scale));
-			// text shadow
-			paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY);
-
-			// draw text to the Canvas center
-			Rect bounds = new Rect();
-			paint.getTextBounds(mText, 0, mText.length(), bounds);
-			int x = (bitmap.getWidth() - bounds.width()) / 6;
-			int y = (bitmap.getHeight() + bounds.height()) / 5;
-
-			canvas.drawText(mText, x * scale, y * scale, paint);
-
-			return bitmap;
-		} catch (Exception e) {
-			// TODO: handle exception
-			return null;
-		}
 	}
 
 	private boolean createMarkers() {
@@ -180,28 +282,40 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 			BitmapDescriptor icon;
 
 			if (display.getWidth() < 480) {
-				icon = BitmapDescriptorFactory
-						.fromAsset("icon/mdpi/m" + counter++ + ".png");
+				icon = BitmapDescriptorFactory.fromAsset("icon/mdpi/m"
+						+ counter++ + ".png");
 			} else if (display.getWidth() < 720) {
-				icon = BitmapDescriptorFactory
-						.fromAsset("icon/mdpi/m" + counter++ + ".png");
+				icon = BitmapDescriptorFactory.fromAsset("icon/mdpi/m"
+						+ counter++ + ".png");
 			} else {
-				icon = BitmapDescriptorFactory
-						.fromAsset("icon/mdpi/m" + counter++ + ".png");
+				icon = BitmapDescriptorFactory.fromAsset("icon/mdpi/m"
+						+ counter++ + ".png");
 			}
 
 			Marker tmpMarker = map.addMarker(new MarkerOptions()
-					.title(place.getName())
-					.snippet(place.getDescription())
-					.position(place .getLatLng()).icon(icon));
+					.title(place.getName()).snippet(place.getDescription())
+					.position(place.getLatLng()).icon(icon));
 
 			markers.add(tmpMarker);
-			
+
 		}
 
 		if (!markers.isEmpty())
 			return true;
 		return false;
+	}
+
+	/**
+	 * Checks if internet is available, and if not, displays a message.
+	 */
+	private boolean checkInternet() {
+		final ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+		if (activeNetwork == null
+				|| activeNetwork.getState() != NetworkInfo.State.CONNECTED) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -265,46 +379,135 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * LocationListener methods.
-	 */
-
-	/**
-	 * 
-	 */
 	@Override
-	public void onLocationChanged(Location location) {
-		int lat = (int) (location.getLatitude());
-		int lng = (int) (location.getLongitude());
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng),
-				15));
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public void onProviderEnabled(String provider) {
-		Toast.makeText(this, "Enabled new provider " + provider,
-				Toast.LENGTH_SHORT).show();
-
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public void onProviderDisabled(String provider) {
-		Toast.makeText(this, "Disabled provider " + provider,
-				Toast.LENGTH_SHORT).show();
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
+	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		// textAction.setText("starting to track touch");
+		updateBar = false;
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		myAudioService.setPos(seekBar.getProgress()); // seekBar.getProgress();
+		// textAction.setText("ended tracking touch");
+		updateBar = true;
+	}
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private static ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get
+			// LocalService instance
+			LocalBinder binder = (LocalBinder) service;
+			myAudioService = binder.getService();
+
+			// mBound = true;
+
+			if (myAudioService.checkPlaying()) {
+				ppclicked = true;
+				mPausePlay.setBackgroundResource(R.drawable.pause);
+			}
+
+			mHandler.postDelayed(moveSeekBarThread, 1000);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			// mBound = false;
+		}
+
+	};
+
+	/** Defines callbacks for service binding, passed to bindService() */
+	private static ServiceConnection mLocationConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get
+			// LocalService instance
+			LocationUpdateService.LocalBinder binder = (LocationUpdateService.LocalBinder) service;
+			mLocationUpdateService = binder.getService();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+		}
+
+	};
+
+	private static Runnable moveSeekBarThread = new Runnable() {
+		private boolean startTxt = true;
+
+		public void run() {
+
+			if (myAudioService.getPos() + 100 > myAudioService.getDur()) {
+				myAudioService.setPos(0);
+				mSeekBar.setProgress(0);
+				myAudioService.pauseAudio();
+				mPausePlay.setBackgroundResource(R.drawable.play);
+
+				int endSeconds = myAudioService.getDur() / 1000;
+				int endMinutes = endSeconds / 60;
+				endSeconds = endSeconds % 60;
+
+				String endSec;
+				if (endSeconds < 10) {
+					endSec = "0" + String.valueOf(endSeconds);
+				} else {
+					endSec = String.valueOf(endSeconds);
+				}
+
+				durationText.setText(myAudioService.getTrackName() + "0" + ":"
+						+ "00" + " / " + endMinutes + ":" + endSec);
+			}
+
+			if ((myAudioService.checkPlaying() && updateBar) || startTxt) {
+				startTxt = false;
+				mSeekBar.setMax(myAudioService.getDur());
+				mSeekBar.setProgress(myAudioService.getPos());
+
+				int curSeconds = myAudioService.getPos() / 1000;
+				int curMinutes = curSeconds / 60;
+				curSeconds = curSeconds % 60;
+				int endSeconds = myAudioService.getDur() / 1000;
+				int endMinutes = endSeconds / 60;
+				endSeconds = endSeconds % 60;
+
+				String curSec, endSec;
+				if (curSeconds < 10) {
+					curSec = "0" + String.valueOf(curSeconds);
+				} else {
+					curSec = String.valueOf(curSeconds);
+				}
+
+				if (endSeconds < 10) {
+					endSec = "0" + String.valueOf(endSeconds);
+				} else {
+					endSec = String.valueOf(endSeconds);
+				}
+
+				durationText.setText(myAudioService.getTrackName() + curMinutes
+						+ ":" + curSec + " / " + endMinutes + ":" + endSec);
+			}
+			mHandler.postDelayed(this, 100); // Looping the thread after 0.1
+												// second
+			// seconds
+		}
+
+	};
+
+	@Override
+	public void onMapClick(LatLng point) {
+		addremoveBar();
+	}
+
 }

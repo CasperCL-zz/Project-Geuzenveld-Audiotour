@@ -4,12 +4,14 @@ public class Site extends Location {
 
 	private String name;
 	private String description;
+	private boolean visited;
 
 	public Site(String name, String description, double latitude,
 			double longitude) {
 		super(latitude, longitude, true);
 		this.name = name;
 		this.description = description;
+		this.visited = false;
 	}
 
 	public String getName() {
@@ -27,4 +29,11 @@ public class Site extends Location {
 				+ "]";
 	}
 
+	public void setVisited(boolean visited) {
+		this.visited = visited;
+	}
+
+	public boolean isVisited() {
+		return visited;
+	}
 }

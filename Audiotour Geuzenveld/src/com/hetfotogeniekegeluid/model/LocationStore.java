@@ -31,6 +31,7 @@ public class LocationStore {
 	 */
 	public void loadLocationStore(Activity context) {
 		locations.clear(); // make the list empty
+		sites.clear();
 
 		Gson gson = new Gson();
 		InputStream is = null;
@@ -75,6 +76,10 @@ public class LocationStore {
 		if (locationStore == null)
 			locationStore = new LocationStore();
 		return locationStore;
+	}
+
+	public Site getSite(int i) {
+		return sites.get(i);
 	}
 
 	public ArrayList<Site> getSites() {
