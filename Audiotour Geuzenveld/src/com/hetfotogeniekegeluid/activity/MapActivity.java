@@ -49,15 +49,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.maps.OverlayItem;
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.model.ApplicationStatus;
 import com.hetfotogeniekegeluid.model.LocationStore;
-import com.hetfotogeniekegeluid.model.LocationUpdateService;
 import com.hetfotogeniekegeluid.model.MenuItems;
-import com.hetfotogeniekegeluid.model.AudioService;
-import com.hetfotogeniekegeluid.model.AudioService.LocalBinder;
 import com.hetfotogeniekegeluid.model.Site;
+import com.hetfotogeniekegeluid.service.AudioService;
+import com.hetfotogeniekegeluid.service.LocationUpdateService;
+import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
 
 /**
  * This class initiates the map, and creates links to other activities.
@@ -71,7 +70,6 @@ public class MapActivity extends FragmentActivity implements
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private LocationStore locationStore;
-	private ArrayList<OverlayItem> mapOverlays;
 	private static AudioService myAudioService;
 	private static LocationUpdateService mLocationUpdateService;
 	private static SeekBar mSeekBar;
@@ -229,7 +227,6 @@ public class MapActivity extends FragmentActivity implements
 	}
 
 	private void createMap() {
-		mapOverlays = new ArrayList<OverlayItem>();
 		markers = new ArrayList<Marker>();
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

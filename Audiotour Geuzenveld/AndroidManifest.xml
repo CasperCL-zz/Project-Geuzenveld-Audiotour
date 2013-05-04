@@ -82,10 +82,10 @@
         
 
         <service 
-            android:name="com.hetfotogeniekegeluid.model.AudioService"
+            android:name="com.hetfotogeniekegeluid.service.AudioService"
             android:enabled="true" />
         <service
-            android:name="com.hetfotogeniekegeluid.model.LocationUpdateService"
+            android:name="com.hetfotogeniekegeluid.service.LocationUpdateService"
             android:enabled="true" />
 
     

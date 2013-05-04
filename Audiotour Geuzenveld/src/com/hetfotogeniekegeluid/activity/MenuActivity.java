@@ -2,8 +2,8 @@ package com.hetfotogeniekegeluid.activity;
 
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.model.ApplicationStatus;
-import com.hetfotogeniekegeluid.model.AudioService;
-import com.hetfotogeniekegeluid.model.AudioService.LocalBinder;
+import com.hetfotogeniekegeluid.service.AudioService;
+import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
 
 import android.app.Activity;
 import android.content.ComponentName;

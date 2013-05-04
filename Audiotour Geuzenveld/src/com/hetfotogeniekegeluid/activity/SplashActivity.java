@@ -17,8 +17,8 @@ import android.util.Log;
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.model.ApplicationStatus;
 import com.hetfotogeniekegeluid.model.LocationStore;
-import com.hetfotogeniekegeluid.model.AudioService;
-import com.hetfotogeniekegeluid.model.AudioService.LocalBinder;
+import com.hetfotogeniekegeluid.service.AudioService;
+import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
 
 /**
  * This is where is all starts.
