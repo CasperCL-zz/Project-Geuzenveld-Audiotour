@@ -17,7 +17,7 @@ public class Site extends Location {
 		this.visited = false;
 	}
 
-	public String getName() {
+	public String getName() {   
 		return name;
 	}
 
