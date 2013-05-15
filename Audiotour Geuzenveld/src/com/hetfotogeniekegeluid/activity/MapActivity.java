@@ -49,7 +49,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.maps.OverlayItem;
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.model.ApplicationStatus;
 import com.hetfotogeniekegeluid.model.LocationStore;
@@ -60,7 +59,7 @@ import com.hetfotogeniekegeluid.service.LocationUpdateService;
 import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
 
 /**
- * This class initiates the map, and creates links to other activities.
+ * This class initiates the map, and creates links to other activities. 
  * 
  * @author Casper
  * 
