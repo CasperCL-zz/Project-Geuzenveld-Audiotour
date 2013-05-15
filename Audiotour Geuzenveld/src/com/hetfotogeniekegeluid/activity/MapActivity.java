@@ -109,8 +109,7 @@ public class MapActivity extends FragmentActivity implements
 			Intent locationUpdateService = new Intent(this,
 					LocationUpdateService.class);
 			startService(locationUpdateService);
-			bindService(locationUpdateService, mLocationConnection,
-					Context.BIND_AUTO_CREATE);
+			bindService(locationUpdateService, mLocationConnection, Context.BIND_AUTO_CREATE);
 
 			setupAudioBar();
 

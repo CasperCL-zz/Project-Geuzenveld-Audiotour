@@ -135,9 +135,9 @@ public class LocationUpdateService extends Service {
 				}
 
 			}
-			// Toast.makeText(ApplicationStatus.getLastContext(),
-			// "Dichtbijzijnde: " + name +" op " + closest + "m",
-			// Toast.LENGTH_SHORT).show();
+//			 Toast.makeText(ApplicationStatus.getLastContext(),
+//			 "Dichtbijzijnde: " + name +" op " + closest + "m",
+//			 Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
