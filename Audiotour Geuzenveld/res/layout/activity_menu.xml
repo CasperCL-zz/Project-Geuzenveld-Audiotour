@@ -18,29 +18,45 @@
         android:layout_height="56dp"
         android:background="@drawable/but1"
         android:onClick="onStartClick"
-        android:textSize="60sp" />
+        android:text="Audiotour"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:typeface="sans" />
 
     <Button
         android:id="@+id/instructions"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:background="@drawable/but2"
+        android:background="@drawable/but1"
         android:onClick="onInstructionClick"
-        android:textSize="60sp" />
+        android:text="Instructies"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:typeface="sans" />
 
     <Button
         android:id="@+id/delen"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/but4"
-        android:onClick="onDelenClick" />
+        android:background="@drawable/but1"
+        android:onClick="onDelenClick"
+        android:text="Delen"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:typeface="sans" />
 
     <Button
         android:id="@+id/colofon"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:background="@drawable/but3"
+        android:background="@drawable/but1"
         android:onClick="onColofonClick"
-        android:textSize="60sp" />
+        android:text="Colofon"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:typeface="normal" />
 
 </LinearLayout>

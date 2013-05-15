@@ -41,47 +41,38 @@ public class SplashActivity extends Activity {
 	private void startSplash() {
 
 		if (!isServiceRunning()) {
-			Log.w("Messege", "Not running");
+			Log.w("Message", "Not running");
 			setContentView(R.layout.activity_splash);
 			player = MediaPlayer.create(this, R.raw.startup);
 			player.setLooping(false); // Set looping
 			player.start();
-		
-		Thread timer = new Thread() {
 
-			@Override
-			public void run() {
+			Thread timer = new Thread() {
 
-				try {
+				@Override
+				public void run() {
+					// Load the predefined locations
+					LocationStore.getInstance().loadLocationStore(
+							SplashActivity.this);
+					try {
+						Thread.sleep(6000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
-					//AudioManager.getInstance(SplashActivity.this)
-						//	.loadAudioFiles();
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				//} catch (IOException e) {
-				//	// TODO Auto-generated catch block
-				//	e.printStackTrace();
+					Intent mainActivity = new Intent(SplashActivity.this,
+							MenuActivity.class);
+					startActivity(mainActivity);
 				}
-				// Load the predefined locations
-				LocationStore.getInstance().loadLocationStore(
-						SplashActivity.this);
+			};
+			timer.start();
+		} else {
 
-				Intent mainActivity = new Intent(SplashActivity.this,
-						MenuActivity.class);
-			  startActivity(mainActivity);
-			}
-		};
-		timer.start();
-		}else{
-			
-			Log.w("Messege", "Running");
-			LocationStore.getInstance().loadLocationStore(
-					SplashActivity.this);
+			Log.w("Message", "Running");
+			LocationStore.getInstance().loadLocationStore(SplashActivity.this);
 			Intent mainActivity = new Intent(SplashActivity.this,
 					MenuActivity.class);
-			startActivity(mainActivity);	
+			startActivity(mainActivity);
 		}
 	}
 
@@ -103,8 +94,8 @@ public class SplashActivity extends Activity {
 		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			Log.w("Messege", service.service.getClassName());
-			if ("com.hetfotogeniekegeluid.model.AudioService"
+			Log.w("Message", service.service.getClassName());
+			if ("com.hetfotogeniekegeluid.service.AudioService"
 					.equals(service.service.getClassName())) {
 				return true;
 			}

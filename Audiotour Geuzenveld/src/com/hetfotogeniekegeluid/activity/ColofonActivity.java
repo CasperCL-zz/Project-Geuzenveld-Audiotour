@@ -19,16 +19,23 @@ public class ColofonActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		ApplicationStatus.setContext(this);
-		
+
 		setContentView(R.layout.activity_colofon);
 		player = MediaPlayer.create(this, R.raw.click);
 	}
 
-	public void openWebsite(View v) {
+	public void openWebsiteGvG(View v) {
 		player.start();
 		Intent intent = new Intent(
 				Intent.ACTION_VIEW,
 				Uri.parse("http://www.nieuwwest.amsterdam.nl/wonen_en/de-9-wijken-van/geuzenveld"));
+		startActivity(intent);
+	}
+
+	public void openWebsitehFG(View v) {
+		player.start();
+		Intent intent = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("http://www.hetfotogeniekegeluid.nl/"));
 		startActivity(intent);
 	}
 

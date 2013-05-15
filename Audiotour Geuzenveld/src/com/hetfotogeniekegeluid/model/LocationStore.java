@@ -89,4 +89,13 @@ public class LocationStore {
 	public ArrayList<Location> getLocations() {
 		return locations;
 	}
+
+	public Site findSite(double latitude, double longitude) {
+		for(Site s: sites){
+			if(s.getLatitude() == latitude && s.getLongitude() == s.getLongitude()){
+				return s;
+			}
+		}
+		return null;
+	}
 }

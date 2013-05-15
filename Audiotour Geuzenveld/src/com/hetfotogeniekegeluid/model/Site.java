@@ -4,13 +4,16 @@ public class Site extends Location {
 
 	private String name;
 	private String description;
+	private String image;
 	private boolean visited;
+	private int audioNr;
 
-	public Site(String name, String description, double latitude,
+	public Site(String name, String description, String image, double latitude,
 			double longitude) {
 		super(latitude, longitude, true);
 		this.name = name;
 		this.description = description;
+		this.image = image;
 		this.visited = false;
 	}
 
@@ -36,4 +39,13 @@ public class Site extends Location {
 	public boolean isVisited() {
 		return visited;
 	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public int getAudioFileNr() {
+		return audioNr;
+	}
+
 }

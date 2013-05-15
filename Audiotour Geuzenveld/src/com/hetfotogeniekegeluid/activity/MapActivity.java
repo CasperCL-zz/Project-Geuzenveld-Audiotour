@@ -1,21 +1,16 @@
 package com.hetfotogeniekegeluid.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
-import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,14 +19,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -39,8 +38,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.maps.OverlayItem;
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.model.ApplicationStatus;
 import com.hetfotogeniekegeluid.model.LocationStore;
@@ -65,23 +66,23 @@ import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
  * 
  */
 public class MapActivity extends FragmentActivity implements
-		OnSeekBarChangeListener, OnMapClickListener {
+		OnSeekBarChangeListener, OnMapClickListener, OnMarkerClickListener {
 
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private LocationStore locationStore;
-	private static AudioService myAudioService;
-	private static LocationUpdateService mLocationUpdateService;
+	private AudioService myAudioService;
+	private LocationUpdateService mLocationUpdateService;
 	private static SeekBar mSeekBar;
 	private static Button mPausePlay;
 	private static Handler mHandler = new Handler();
 	private static Handler mHandler2 = new Handler();
 	private static boolean updateBar = true;
-	private static boolean ppclicked = false;
 	private static View barPosition;
 	private boolean barVisible = false;
 	private static TextView durationText;
 	private static boolean checkedForGPS = false;
+	private HashMap<Marker, Site> mMarkerMap = new HashMap<Marker, Site>();
 
 	/**
 	 * This happens on when the application starts.
@@ -102,47 +103,50 @@ public class MapActivity extends FragmentActivity implements
 			createMap();
 
 			// Start the audio service
+			Intent audioService = new Intent(this, AudioService.class);
+			startService(audioService);
+			bindService(audioService, mConnection, Context.BIND_AUTO_CREATE);
 
-			if (myAudioService == null) {
-				Intent audioService = new Intent(this, AudioService.class);
-				startService(audioService);
-				bindService(audioService, mConnection, Context.BIND_AUTO_CREATE);
-			} else {
-				// TODO: regain the link to the audio service
-
-			}
-
-			if (!LocationUpdateService.isRunning(this)) {
-				Intent locationUpdateService = new Intent(this,
-						LocationUpdateService.class);
-				startService(locationUpdateService);
-				bindService(locationUpdateService, mLocationConnection,
-						Context.BIND_AUTO_CREATE);
-			}
+			Intent locationUpdateService = new Intent(this,
+					LocationUpdateService.class);
+			startService(locationUpdateService);
+			bindService(locationUpdateService, mLocationConnection,
+					Context.BIND_AUTO_CREATE);
 
 			setupAudioBar();
 
 			// Move the map to the view
 			if (getIntent().getExtras() != null) {
-				ApplicationStatus.getMapActivity().finish();// finish the
-															// previous map
-															// activity in order
-															// to prevent
-															// multiple
-															// mapactivities.
+				if (ApplicationStatus.getMapActivity() != null)
+					ApplicationStatus.getMapActivity().finish();// finish the
+																// previous map
+																// activity in
+																// order
+																// to prevent
+																// multiple
+																// mapactivities.
+
 				ApplicationStatus.setMapActivity(this);
 				Location loc = (Location) getIntent().getExtras().get(
 						"specific_zoom_location");
+				//
+				// Log.w("DEBUG", "Zooming to specific Location lat: " +
+				// loc.getLatitude()
+				// + " long: " + loc.getLongitude());
 
-				Log.w("ZOOM_TEST", "Location lat: " + loc.getLatitude()
-						+ " long: " + loc.getLongitude());
-				map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-						new LatLng(loc.getLatitude(), loc.getLongitude()), 18));
+				LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				Location myLocation = lm
+						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+						myLocation.getLatitude(), myLocation.getLongitude()),
+						18));
+				locationStore.findSite(loc.getLatitude(), loc.getLongitude());
 			} else {
 				ApplicationStatus.setMapActivity(this);
-				Log.w("ZOOM_TEST", "zooming to default location");
+				Log.w("DEBUG", "zooming to default location");
+				
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-						52.380498, 4.802291), 15));
+						locationStore.getSite(0).getLatitude(), locationStore.getSite(0).getLongitude()), 15));
 			}
 		} else {
 			// Show that you need internet to continue and quit to the main menu
@@ -172,6 +176,7 @@ public class MapActivity extends FragmentActivity implements
 
 		barPosition = (View) findViewById(R.id.audioBar);
 		barPosition.setVisibility(View.INVISIBLE);
+		setButtonImage();
 	}
 
 	void addremoveBar() {
@@ -191,39 +196,27 @@ public class MapActivity extends FragmentActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		// Is it necessary to unbind the service? I guess the service should be
-		// unbound as soon as the app goes down.
-		// if (myAudioService != null) {
-		// unbindService(mConnection);
-		// }
-		//
-		// if (mLocationUpdateService != null)
-		// unbindService(mLocationConnection);
-
+		unbindService(mConnection);
+		unbindService(mLocationConnection);
 	}
-
+	
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
 		ApplicationStatus.activityPaused();
+
 	}
 
 	protected void onResume() {
 		super.onResume();
 		ApplicationStatus.activityResumed();
+		setButtonImage();
 	};
 
 	public void audioStart(View v) {
 		myAudioService.startstopAudio();
-		if (ppclicked) {
-			ppclicked = false;
-			mPausePlay.setBackgroundResource(R.drawable.play);
-		} else {
-			ppclicked = true;
-			mPausePlay.setBackgroundResource(R.drawable.pause);
-		}
+		setButtonImage();
 	}
 
 	private void createMap() {
@@ -235,11 +228,21 @@ public class MapActivity extends FragmentActivity implements
 		map.setMyLocationEnabled(true);
 		map.setIndoorEnabled(true);
 		map.setOnMapClickListener(this);
+		map.setOnMarkerClickListener(this);
 
 		locationStore = LocationStore.getInstance();
 
 		createMarkers();
 		createRoute();
+	}
+
+	private void setButtonImage() {
+		if (myAudioService != null)
+			if (myAudioService.checkPlaying()) {
+				mPausePlay.setBackgroundResource(R.drawable.pause);
+			} else {
+				mPausePlay.setBackgroundResource(R.drawable.play);
+			}
 	}
 
 	/**
@@ -290,10 +293,12 @@ public class MapActivity extends FragmentActivity implements
 			}
 
 			Marker tmpMarker = map.addMarker(new MarkerOptions()
-					.title(place.getName()).snippet(place.getDescription())
+			// .title(place.getName())
+			// .snippet(place.getDescription())
 					.position(place.getLatLng()).icon(icon));
 
 			markers.add(tmpMarker);
+			mMarkerMap.put(tmpMarker, place);
 
 		}
 
@@ -398,7 +403,7 @@ public class MapActivity extends FragmentActivity implements
 	}
 
 	/** Defines callbacks for service binding, passed to bindService() */
-	private static ServiceConnection mConnection = new ServiceConnection() {
+	private ServiceConnection mConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -408,11 +413,6 @@ public class MapActivity extends FragmentActivity implements
 			myAudioService = binder.getService();
 
 			// mBound = true;
-
-			if (myAudioService.checkPlaying()) {
-				ppclicked = true;
-				mPausePlay.setBackgroundResource(R.drawable.pause);
-			}
 
 			mHandler.postDelayed(moveSeekBarThread, 1000);
 		}
@@ -425,7 +425,7 @@ public class MapActivity extends FragmentActivity implements
 	};
 
 	/** Defines callbacks for service binding, passed to bindService() */
-	private static ServiceConnection mLocationConnection = new ServiceConnection() {
+	private ServiceConnection mLocationConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -433,6 +433,7 @@ public class MapActivity extends FragmentActivity implements
 			// LocalService instance
 			LocationUpdateService.LocalBinder binder = (LocationUpdateService.LocalBinder) service;
 			mLocationUpdateService = binder.getService();
+
 		}
 
 		@Override
@@ -441,7 +442,7 @@ public class MapActivity extends FragmentActivity implements
 
 	};
 
-	private static Runnable moveSeekBarThread = new Runnable() {
+	private Runnable moveSeekBarThread = new Runnable() {
 		private boolean startTxt = true;
 
 		public void run() {
@@ -463,8 +464,8 @@ public class MapActivity extends FragmentActivity implements
 					endSec = String.valueOf(endSeconds);
 				}
 
-				durationText.setText(myAudioService.getTrackName() + "0" + ":"
-						+ "00" + " / " + endMinutes + ":" + endSec);
+				durationText.setText(myAudioService.getCurrentTrackName() + "0"
+						+ ":" + "00" + " / " + endMinutes + ":" + endSec);
 			}
 
 			if ((myAudioService.checkPlaying() && updateBar) || startTxt) {
@@ -492,8 +493,9 @@ public class MapActivity extends FragmentActivity implements
 					endSec = String.valueOf(endSeconds);
 				}
 
-				durationText.setText(myAudioService.getTrackName() + curMinutes
-						+ ":" + curSec + " / " + endMinutes + ":" + endSec);
+				durationText.setText(myAudioService.getCurrentTrackName()
+						+ curMinutes + ":" + curSec + " / " + endMinutes + ":"
+						+ endSec);
 			}
 			mHandler.postDelayed(this, 100); // Looping the thread after 0.1
 												// second
@@ -507,4 +509,43 @@ public class MapActivity extends FragmentActivity implements
 		addremoveBar();
 	}
 
+	private void showPopup(final Site site) {
+		ViewGroup popup = (ViewGroup) getLayoutInflater().inflate(
+				R.layout.popup_map, null);
+		final PopupWindow popupWindow = new PopupWindow(popup,
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.showAtLocation(mSeekBar, Gravity.CENTER, 0, 0);
+
+		((TextView) popup.findViewById(R.id.textViewTitle)).setText(site
+				.getName());
+		((TextView) popup.findViewById(R.id.textViewExtra)).setText(site
+				.getDescription());
+
+		int imageResource = getResources().getIdentifier(site.getImage(),
+				"drawable", getPackageName());
+		((ImageView) popup.findViewById(R.id.imageViewLocation))
+				.setImageResource(imageResource);
+
+		popup.findViewById(R.id.imagePopupPlay).setOnClickListener(
+				new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (!barVisible)
+							addremoveBar();
+						myAudioService.setFileNr(site.getAudioFileNr());
+						myAudioService.makePlayer();
+						// popupWindow.dismiss();
+						audioStart(v);
+					}
+				});
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		showPopup(mMarkerMap.get(marker));
+		return false;
+	}
 }

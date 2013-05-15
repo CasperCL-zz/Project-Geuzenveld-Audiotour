@@ -31,7 +31,6 @@ public class LocationUpdateService extends Service {
 
 	private static final String TAG = "Audiotour_LocationService";
 	private final IBinder mBinder = new LocalBinder();
-	private Context context;
 
 	public class LocalBinder extends Binder {
 
@@ -41,7 +40,7 @@ public class LocationUpdateService extends Service {
 			return LocationUpdateService.this;
 		}
 	}
-
+	
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// Return this instance of LocalService so clients can call public
@@ -73,70 +72,72 @@ public class LocationUpdateService extends Service {
 		public void onLocationChanged(Location myLocation) {
 			Log.w("DEBUG", "Location changed: " + myLocation.getLatitude()
 					+ ", " + myLocation.getLongitude());
-			
-			if (ApplicationStatus.isActivityVisible()) {
-				final AlertDialog alertDialog = new AlertDialog.Builder(
-						ApplicationStatus.getLastContext()).create();
-				alertDialog.setTitle("Site");
-				alertDialog.setMessage("U bent vlakbij "
-						+ LocationStore.getInstance().getSite(0).getName());
-				alertDialog.setButton("Ja",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								alertDialog.dismiss();
-							}
-						});
-				alertDialog.show();
-			} else {
-				Site s = LocationStore.getInstance().getSite(0);
-				Location tmp = new Location(s.getName());
-				tmp.setLatitude(s.getLatitude());
-				tmp.setLongitude(s.getLongitude());
-				createNewLocationNotifi(s.getName(), tmp);
-			}
+			// if (ApplicationStatus.isActivityVisible()) {
+			// final AlertDialog alertDialog = new AlertDialog.Builder(
+			// ApplicationStatus.getLastContext()).create();
+			// alertDialog.setTitle("Site");
+			// alertDialog.setMessage("U bent vlakbij "
+			// + LocationStore.getInstance().getSite(0).getName());
+			// alertDialog.setButton("Ja",
+			// new DialogInterface.OnClickListener() {
+			// public void onClick(DialogInterface dialog,
+			// int which) {
+			// alertDialog.dismiss();
+			// }
+			// });
+			// alertDialog.show();
+			// } else {
+			// Site s = LocationStore.getInstance().getSite(0);
+			// Location tmp = new Location(s.getName());
+			// tmp.setLatitude(s.getLatitude());
+			// tmp.setLongitude(s.getLongitude());
+			// createNewLocationNotifi(s.getName(), tmp);
+			// }
 
+			double closest = 90000;
+			String name = "";
 			for (Site site : LocationStore.getInstance().getSites()) {
 				double dist = distFrom(myLocation, site);
-
-				if (dist < 20 && !site.isVisited()) { // 20 meters near a
+				if (dist < closest) {
+					closest = dist;
+					name = site.getName();
+				}
+				if (dist < 30 && !site.isVisited()) { // 20 meters near a
 														// site and not
 														// visited (this
 														// prevents spam)
-					Location l = new Location(site.getName());
-					l.setLatitude(site.getLatitude());
-					l.setLongitude(site.getLongitude());
 
 					site.setVisited(true);
 
 					// Show a popup when in app; else create a notification
-					// if (ApplicationStatus.isActivityVisible()) {
-					// if(!context.getClass().equals(MapActivity.class)) {
-					// Intent intent = new Intent(LocationUpdateService.this,
-					// MapActivity.class);
-					// intent.putExtra("specific_zoom_location", l);
-					// startActivity(intent);
-					// } else {
-					// final AlertDialog alertDialog = new AlertDialog.Builder(
-					// ApplicationStatus.getLastContext()).create();
-					// alertDialog.setTitle("Site");
-					// alertDialog.setMessage("U bent vlakbij " +
-					// site.getName());
-					// alertDialog.setButton("Ok", new
-					// DialogInterface.OnClickListener() {
-					// public void onClick(DialogInterface dialog, int which) {
-					// alertDialog.dismiss();
-					// }
-					// });
-					// alertDialog.show();
-					//
-					// }
-					// } else {
-					// createNewLocationNotifi(site.getName(), l);
-					// }
+					if (ApplicationStatus.isActivityVisible()) {
+						final AlertDialog alertDialog = new AlertDialog.Builder(
+								ApplicationStatus.getLastContext()).create();
+						alertDialog.setTitle("Site");
+						alertDialog.setMessage("U bent vlakbij "
+								+ site.getName());
+						alertDialog.setButton("Ok",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										alertDialog.dismiss();
+									}
+								});
+						alertDialog.show();
+					} else {
+						Location l = new Location(site.getName());
+						l.setLatitude(site.getLatitude());
+						l.setLongitude(site.getLongitude());
+						Log.w("LUS", site.getName() + ": " + l.getLatitude()
+								+ ", " + l.getLongitude());
+						createNewLocationNotifi(site.getName(), l);
+					}
 				}
 
 			}
+			// Toast.makeText(ApplicationStatus.getLastContext(),
+			// "Dichtbijzijnde: " + name +" op " + closest + "m",
+			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -228,9 +229,5 @@ public class LocationUpdateService extends Service {
 		noti.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		notificationManager.notify(0, noti);
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
 	}
 }

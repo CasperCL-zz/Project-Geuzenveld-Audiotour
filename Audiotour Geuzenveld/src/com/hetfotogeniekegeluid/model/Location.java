@@ -1,7 +1,7 @@
 package com.hetfotogeniekegeluid.model;
 
 import com.google.android.gms.maps.model.LatLng;
-
+import com.google.android.maps.GeoPoint;
 
 public class Location {
 
