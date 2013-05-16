@@ -1,2 +1,124 @@
-{"name":"Op de weg","description":"Pluspunt, Albardakade 5","audioNr":1,"image":"op_weg","latitude":52.338341,"longitude":4.92651,"isASite":true}
-{"name":"Hart van Geuzenveld","description":"Lambertus Zijlplein","audioNr":1,"image":"hart_van_geuzenveld","latitude":52.340387,"longitude":4.922524,"isASite":true}
+{"name":"Op de weg","description":"Pluspunt, Albardakade 5","audioNr":1,"image":"op_weg","latitude":52.378167,"longitude":4.802506,"isASite":true}
+{"name":"Hart van Geuzenveld","description":"Lambertus Zijlplein","audioNr":2,"image":"hart_van_geuzenveld","latitude":52.378164,"longitude":4.801814,"isASite":true}
+{"latitude":52.379277,"longitude":4.801793,"isASite":false}
+{"name":"Leven in een bouwput","description":"Bouwterrein, hoek Kruisherenpad/Albardagracht","audioNr":3,"image":"leven_in_een_bouwput","latitude":52.380235,"longitude":4.801736,"isASite":true}
+{"latitude":52.380434,"longitude":4.801756,"isASite":false}
+{"latitude":52.379266,"longitude":4.801838,"isASite":false}
+{"latitude":52.379296,"longitude":4.803075,"isASite":false}
+{"latitude":52.378992,"longitude":4.803112,"isASite":false}
+{"latitude":52.379025,"longitude":4.804308,"isASite":false}
+{"name":"De eerste jaren","description":"Hoek Bouwen Ewoutszstraat/Dirk Sonoystraat","audioNr":4,"image":"de_eerste_jaren","latitude":52.37818,"longitude":4.804346,"isASite":true}
+{"latitude":52.37783,"longitude":4.804315,"isASite":false}
+{"latitude":52.37726,"longitude":4.804303,"isASite":false}
+{"latitude":52.377022,"longitude":4.806502,"isASite":false}
+{"latitude":52.37677,"longitude":4.806411,"isASite":false}
+{"latitude":52.376518,"longitude":4.806313,"isASite":false}
+{"latitude":52.376688,"longitude":4.804787,"isASite":false}
+{"name":"Smeltkroes","description":"Nicolaas Ruychaverstraat","audioNr":5,"image":"smeltkroes","latitude":52.376783,"longitude":4.803587,"isASite":true}
+{"latitude":52.37684,"longitude":4.80316,"isASite":false}
+{"latitude":52.376958,"longitude":4.801897,"isASite":false}
+{"latitude":52.37681,"longitude":4.801854,"isASite":false}
+{"latitude":52.376627,"longitude":4.801807,"isASite":false}
+{"latitude":52.376511,"longitude":4.801765,"isASite":false}
+{"latitude":52.376419,"longitude":4.801727,"isASite":false}
+{"latitude":52.376286,"longitude":4.8017,"isASite":false}
+{"latitude":52.376196,"longitude":4.801688,"isASite":false}
+{"latitude":52.376135,"longitude":4.801682,"isASite":false}
+{"latitude":52.376049,"longitude":4.801668,"isASite":false}
+{"latitude":52.375968,"longitude":4.801657,"isASite":false}
+{"latitude":52.375886,"longitude":4.801638,"isASite":false}
+{"latitude":52.375812,"longitude":4.801616,"isASite":false}
+{"name":"Verzet tegen sloop","description":"Hoek De Savornin Lohmanstraat/Troelstralaan","audioNr":6,"image":"verzet_tegen_sloop","latitude":52.375907,"longitude":4.801642,"isASite":true}
+{"latitude":52.37548,"longitude":4.80149,"isASite":false}
+{"latitude":52.375435,"longitude":4.801442,"isASite":false}
+{"latitude":52.375402,"longitude":4.801406,"isASite":false}
+{"latitude":52.375372,"longitude":4.801381,"isASite":false}
+{"latitude":52.375359,"longitude":4.801369,"isASite":false}
+{"latitude":52.375269,"longitude":4.801331,"isASite":false}
+{"latitude":52.375229,"longitude":4.801594,"isASite":false}
+{"latitude":52.374291,"longitude":4.80135,"isASite":false}
+{"latitude":52.374402,"longitude":4.800435,"isASite":false}
+{"name":"Nieuwe Tijden","description":"De Drakenkop, van Karnebeekstraat 15","audioNr":7,"image":"nieuwe_tijden","latitude":52.374540,"longitude":4.79913,"isASite":true}
+{"latitude":52.374633,"longitude":4.798169,"isASite":false}
+{"latitude":52.3747,"longitude":4.79726,"isASite":false}
+{"latitude":52.374718,"longitude":4.797152,"isASite":false}
+{"latitude":52.374812,"longitude":4.79683,"isASite":false}
+{"latitude":52.374946,"longitude":4.796392,"isASite":false}
+{"latitude":52.375049,"longitude":4.796458,"isASite":false}
+{"latitude":52.375087,"longitude":4.796517,"isASite":false}
+{"latitude":52.375114,"longitude":4.796606,"isASite":false}
+{"latitude":52.375131,"longitude":4.796769,"isASite":false}
+{"latitude":52.375146,"longitude":4.796873,"isASite":false}
+{"latitude":52.375187,"longitude":4.796946,"isASite":false}
+{"latitude":52.375247,"longitude":4.797015,"isASite":false}
+{"latitude":52.375323,"longitude":4.797085,"isASite":false}
+{"latitude":52.375478,"longitude":4.797194,"isASite":false}
+{"latitude":52.37557,"longitude":4.797305,"isASite":false}
+{"latitude":52.375711,"longitude":4.797457,"isASite":false}
+{"latitude":52.375731,"longitude":4.797564,"isASite":false}
+{"latitude":52.376173,"longitude":4.797671,"isASite":false}
+{"latitude":52.376248,"longitude":4.797651,"isASite":false}
+{"name":"Voetbaldromen","description":"Sportveldje, Aalbersestraat (veld bij de bushalte)","audioNr":8,"image":"voetbaldromen","latitude":52.376349,"longitude":4.797557,"isASite":true}
+{"latitude":52.376506,"longitude":4.79774,"isASite":false}
+{"latitude":52.376599,"longitude":4.797773,"isASite":false}
+{"latitude":52.37692,"longitude":4.79786,"isASite":false}
+{"latitude":52.376986,"longitude":4.797907,"isASite":false}
+{"latitude":52.377056,"longitude":4.797936,"isASite":false}
+{"latitude":52.377211,"longitude":4.797993,"isASite":false}
+{"latitude":52.377366,"longitude":4.79803,"isASite":false}
+{"latitude":52.377558,"longitude":4.798064,"isASite":false}
+{"latitude":52.377647,"longitude":4.798036,"isASite":false}
+{"latitude":52.378072,"longitude":4.798018,"isASite":false}
+{"latitude":52.378147,"longitude":4.798011,"isASite":false}
+{"latitude":52.378529,"longitude":4.797977,"isASite":false}
+{"latitude":52.378903,"longitude":4.797979,"isASite":false}
+{"latitude":52.378971,"longitude":4.798011,"isASite":false}
+{"latitude":52.379069,"longitude":4.798016,"isASite":false}
+{"name":"Roomse inslag","description":"Kerkgebouw, Aalbersestraat","audioNr":9,"image":"roomse_inslag","latitude":52.379629,"longitude":4.798012,"isASite":true}
+{"latitude":52.380433,"longitude":4.798016,"isASite":false}
+{"latitude":52.380419,"longitude":4.796943,"isASite":false}
+{"latitude":52.380844,"longitude":4.79694,"isASite":false}
+{"latitude":52.380918,"longitude":4.796967,"isASite":false}
+{"name":"Leren wonen","description":"Speelplein, Abraham van der Hartstraat/Jacob Husleystraat","audioNr":10,"image":"leren_wonen","latitude":52.381199,"longitude":4.796503,"isASite":true}
+{"latitude":52.380942,"longitude":4.796229,"isASite":false}
+{"latitude":52.381017,"longitude":4.796263,"isASite":false}
+{"latitude":52.380942,"longitude":4.796229,"isASite":false}
+{"latitude":52.381017,"longitude":4.796263,"isASite":false}
+{"latitude":52.381702,"longitude":4.796227,"isASite":false}
+{"latitude":52.381716,"longitude":4.796963,"isASite":false}
+{"latitude":52.381754,"longitude":4.797868,"isASite":false}
+{"latitude":52.381945,"longitude":4.797868,"isASite":false}
+{"latitude":52.382142,"longitude":4.797844,"isASite":false}
+{"latitude":52.382204,"longitude":4.797846,"isASite":false}
+{"latitude":52.382255,"longitude":4.797883,"isASite":false}
+{"latitude":52.382295,"longitude":4.797966,"isASite":false}
+{"name":"Geuzennaam","description":"Beeld \u0027De Eendracht\u0027, Ruys de Beerenbrouckstraat","audioNr":11,"image":"geuzennaam","latitude":52.38243,"longitude":4.798051,"isASite":true}
+{"latitude":52.382315,"longitude":4.798214,"isASite":false}
+{"latitude":52.382325,"longitude":4.79843,"isASite":false}
+{"latitude":52.382318,"longitude":4.799196,"isASite":false}
+{"latitude":52.381594,"longitude":4.799239,"isASite":false}
+{"latitude":52.381406,"longitude":4.799259,"isASite":false}
+{"latitude":52.380972,"longitude":4.79926,"isASite":false}
+{"latitude":52.380996,"longitude":4.800481,"isASite":false}
+{"name":"Kunstgreep","description":"De Geuzentuinen, Kruisherenpad","audioNr":12,"image":"kunstgreep","latitude":52.380954,"longitude":4.801691,"isASite":true}
+{"latitude":52.380986,"longitude":4.802703,"isASite":false}
+{"latitude":52.381706,"longitude":4.802645,"isASite":false}
+{"latitude":52.38172,"longitude":4.803879,"isASite":false}
+{"latitude":52.381716,"longitude":4.805097,"isASite":false}
+{"latitude":52.381727,"longitude":4.805737,"isASite":false}
+{"name":"Bakkie troost","description":"Bouwterrein, Wigbolt Ripperdastraat","audioNr":13,"image":"bakkie_troost","latitude":52.382545,"longitude":4.806119,"isASite":true}
+{"latitude":52.381733,"longitude":4.80606,"isASite":false}
+{"latitude":52.38174,"longitude":4.806422,"isASite":false}
+{"latitude":52.381618,"longitude":4.806429,"isASite":false}
+{"name":"Hoog niveau","description":"Parkrand, Dr H. Colijnstraat","audioNr":14,"image":"hoog_niveau","latitude":52.381495,"longitude":4.806869,"isASite":true}
+{"latitude":52.381368,"longitude":4.806433,"isASite":false}
+{"latitude":52.381032,"longitude":4.806439,"isASite":false}
+{"latitude":52.380584,"longitude":4.806433,"isASite":false}
+{"latitude":52.380095,"longitude":4.806425,"isASite":false}
+{"latitude":52.379955,"longitude":4.806473,"isASite":false}
+{"latitude":52.37964,"longitude":4.806505,"isASite":false}
+{"latitude":52.379372,"longitude":4.806497,"isASite":false}
+{"latitude":52.379103,"longitude":4.806532,"isASite":false}
+{"latitude":52.378437,"longitude":4.806535,"isASite":false}
+{"latitude":52.378204,"longitude":4.806552,"isASite":false}
+{"name":"Naar huis","description":"Hoek Dr H. Colijnstraat/Dirk Sonoystraat","audioNr":15,"image":"naar_huis","latitude":52.378239,"longitude":4.806481,"isASite":true}
