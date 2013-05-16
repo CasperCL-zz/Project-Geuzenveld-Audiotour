@@ -79,62 +79,62 @@ public class AudioService extends Service {
 			player = MediaPlayer.create(this, R.raw.file1);
 			currentTrackName = "1: Op Weg ";
 			break;
-//		case 2:
-//			player = MediaPlayer.create(this, R.raw.file2);
-//			currentTrackName = "2: Hart van Geuzenveld ";
-//			break;
-//		case 3:
-//			player = MediaPlayer.create(this, R.raw.file3);
-//			currentTrackName = "3: Leven in een Bouwput ";
-//			break;
-//		case 4:
-//			player = MediaPlayer.create(this, R.raw.file4);
-//			currentTrackName = "4: De eerste jaren ";
-//			break;
-//		case 5:
-//			player = MediaPlayer.create(this, R.raw.file5);
-//			currentTrackName = "5: Smeltkroes ";
-//			break;
-//		case 6:
-//			player = MediaPlayer.create(this, R.raw.file6);
-//			currentTrackName = "6: Verzet tegen sloop ";
-//			break;
-//		case 7:
-//			player = MediaPlayer.create(this, R.raw.file7);
-//			currentTrackName = "7: Nieuwe Tijden ";
-//			break;
-//		case 8:
-//			player = MediaPlayer.create(this, R.raw.file8);
-//			currentTrackName = "8: Voetbaldromen ";
-//			break;
-//		case 9:
-//			player = MediaPlayer.create(this, R.raw.file9);
-//			currentTrackName = "9: Roomse inslag ";
-//			break;
-//		case 10:
-//			player = MediaPlayer.create(this, R.raw.file10);
-//			currentTrackName = "10: Leren wonen ";
-//			break;
-//		case 11:
-//			player = MediaPlayer.create(this, R.raw.file11);
-//			currentTrackName = "11: Geuzennaam ";
-//			break;
-//		case 12:
-//			player = MediaPlayer.create(this, R.raw.file12);
-//			currentTrackName = "12: Kunstgreep ";
-//			break;
-//		case 13:
-//			player = MediaPlayer.create(this, R.raw.file13);
-//			currentTrackName = "13: Bakkie troost ";
-//			break;
-//		case 14:
-//			player = MediaPlayer.create(this, R.raw.file14);
-//			currentTrackName = "14: Hoog niveau ";
-//			break;
-//		case 15:
-//			player = MediaPlayer.create(this, R.raw.file15);
-//			currentTrackName = "15: Naar huis ";
-//			break;
+		case 2:
+			player = MediaPlayer.create(this, R.raw.file2);
+			currentTrackName = "2: Hart van Geuzenveld ";
+			break;
+		case 3:
+			player = MediaPlayer.create(this, R.raw.file3);
+			currentTrackName = "3: Leven in een Bouwput ";
+			break;
+		case 4:
+			player = MediaPlayer.create(this, R.raw.file4);
+			currentTrackName = "4: De eerste jaren ";
+			break;
+		case 5:
+			player = MediaPlayer.create(this, R.raw.file5);
+			currentTrackName = "5: Smeltkroes ";
+			break;
+		case 6:
+			player = MediaPlayer.create(this, R.raw.file6);
+			currentTrackName = "6: Verzet tegen sloop ";
+			break;
+		case 7:
+			player = MediaPlayer.create(this, R.raw.file7);
+			currentTrackName = "7: Nieuwe Tijden ";
+			break;
+		case 8:
+			player = MediaPlayer.create(this, R.raw.file8);
+			currentTrackName = "8: Voetbaldromen ";
+			break;
+		case 9:
+			player = MediaPlayer.create(this, R.raw.file9);
+			currentTrackName = "9: Roomse inslag ";
+			break;
+		case 10:
+			player = MediaPlayer.create(this, R.raw.file10);
+			currentTrackName = "10: Leren wonen ";
+			break;
+		case 11:
+			player = MediaPlayer.create(this, R.raw.file11);
+			currentTrackName = "11: Geuzennaam ";
+			break;
+		case 12:
+			player = MediaPlayer.create(this, R.raw.file12);
+			currentTrackName = "12: Kunstgreep ";
+			break;
+		case 13:
+			player = MediaPlayer.create(this, R.raw.file13);
+			currentTrackName = "13: Bakkie troost ";
+			break;
+		case 14:
+			player = MediaPlayer.create(this, R.raw.file14);
+			currentTrackName = "14: Hoog niveau ";
+			break;
+		case 15:
+			player = MediaPlayer.create(this, R.raw.file15);
+			currentTrackName = "15: Naar huis ";
+			break;
 
 		}
 

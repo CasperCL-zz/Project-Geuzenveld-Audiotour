@@ -59,7 +59,7 @@ import com.hetfotogeniekegeluid.service.LocationUpdateService;
 import com.hetfotogeniekegeluid.service.AudioService.LocalBinder;
 
 /**
- * This class initiates the map, and creates links to other activities. 
+ * This class initiates the map, and creates links to other activities.
  * 
  * @author Casper
  * 
@@ -81,6 +81,7 @@ public class MapActivity extends FragmentActivity implements
 	private boolean barVisible = false;
 	private static TextView durationText;
 	private static boolean checkedForGPS = false;
+	private boolean isBinded;
 	private HashMap<Marker, Site> mMarkerMap = new HashMap<Marker, Site>();
 
 	/**
@@ -91,6 +92,7 @@ public class MapActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		ApplicationStatus.setContext(this);
 		setContentView(R.layout.activity_map);
+		isBinded = false;
 
 		// Check for internet for the map
 		if (checkInternet()) {
@@ -109,7 +111,9 @@ public class MapActivity extends FragmentActivity implements
 			Intent locationUpdateService = new Intent(this,
 					LocationUpdateService.class);
 			startService(locationUpdateService);
-			bindService(locationUpdateService, mLocationConnection, Context.BIND_AUTO_CREATE);
+			bindService(locationUpdateService, mLocationConnection,
+					Context.BIND_AUTO_CREATE);
+			isBinded = true;
 
 			setupAudioBar();
 
@@ -142,9 +146,10 @@ public class MapActivity extends FragmentActivity implements
 			} else {
 				ApplicationStatus.setMapActivity(this);
 				Log.w("DEBUG", "zooming to default location");
-				
+
 				map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-						locationStore.getSite(0).getLatitude(), locationStore.getSite(0).getLongitude()), 15));
+						locationStore.getSite(0).getLatitude(), locationStore
+								.getSite(0).getLongitude()), 15));
 			}
 		} else {
 			// Show that you need internet to continue and quit to the main menu
@@ -194,10 +199,12 @@ public class MapActivity extends FragmentActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unbindService(mConnection);
-		unbindService(mLocationConnection);
+		if (isBinded) {
+			unbindService(mConnection);
+			unbindService(mLocationConnection);
+		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
