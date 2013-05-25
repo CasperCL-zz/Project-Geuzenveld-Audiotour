@@ -1,7 +1,7 @@
 {"name":"1. Op weg","description":"Pluspunt, Albardakade 5","audioNr":1,"image":"op_weg","latitude":52.378167,"longitude":4.802506,"isASite":true}
 {"name":"2. Hart van Geuzenveld","description":"Lambertus Zijlplein","audioNr":2,"image":"hart_van_geuzenveld","latitude":52.378164,"longitude":4.801814,"isASite":true}
 {"latitude":52.379277,"longitude":4.801793,"isASite":false}
-{"name":"3. Leven in een Bouwput","description":"Bouwterrein, hoek Kruisherenpad/Albardagracht","audioNr":3,"image":"leven_in_een_bouwput","latitude":52.380235,"longitude":4.801736,"isASite":true}
+{"name":"3. Leven in een bouwput","description":"Bouwterrein, hoek Kruisherenpad/Albardagracht","audioNr":3,"image":"leven_in_een_bouwput","latitude":52.380235,"longitude":4.801736,"isASite":true}
 {"latitude":52.380434,"longitude":4.801756,"isASite":false}
 {"latitude":52.379266,"longitude":4.801838,"isASite":false}
 {"latitude":52.379296,"longitude":4.803075,"isASite":false}
@@ -38,7 +38,7 @@
 {"latitude":52.375229,"longitude":4.801594,"isASite":false}
 {"latitude":52.374291,"longitude":4.80135,"isASite":false}
 {"latitude":52.374402,"longitude":4.800435,"isASite":false}
-{"name":"7. Nieuwe Tijden","description":"De Drakenkop, van Karnebeekstraat 15","audioNr":7,"image":"nieuwe_Tijden","latitude":52.374540,"longitude":4.79913,"isASite":true}
+{"name":"7. Nieuwe Tijden","description":"De Drakenkop, van Karnebeekstraat 15","audioNr":7,"image":"nieuwe_tijden","latitude":52.374540,"longitude":4.79913,"isASite":true}
 {"latitude":52.374633,"longitude":4.798169,"isASite":false}
 {"latitude":52.3747,"longitude":4.79726,"isASite":false}
 {"latitude":52.374718,"longitude":4.797152,"isASite":false}
@@ -101,13 +101,10 @@
 {"latitude":52.380972,"longitude":4.79926,"isASite":false}
 {"latitude":52.380996,"longitude":4.800481,"isASite":false}
 {"name":"12. Kunstgreep","description":"De Geuzentuinen, Kruisherenpad","audioNr":12,"image":"kunstgreep","latitude":52.380954,"longitude":4.801691,"isASite":true}
-{"latitude":52.380986,"longitude":4.802703,"isASite":false}
-{"latitude":52.38235802,"longitude":4.8025918,"isASite":false}
-{"latitude":52.38250209,"longitude":4.80606794,"isASite":false}
-{"name":"13. Bakkie troost","description":"Bouwterrein, Wigbolt Ripperdastraat","audioNr":13,"image":"bakkie_troost","latitude":52.382545,"longitude":4.806119,"isASite":true}
-{"latitude":52.38229253,"longitude":4.80641127,"isASite":false}
-{"latitude":52.38174,"longitude":4.806422,"isASite":false}
-{"latitude":52.381618,"longitude":4.806429,"isASite":false}
+{"latitude":52.38096966,"longitude":4.80269909,"isASite":false}
+{"latitude":52.38170314,"longitude":4.80263472,"isASite":false}
+{"name":"13. Bakkie troost","description":"Bouwterrein, Wigbolt Ripperdastraat","audioNr":13,"image":"bakkie_troost","latitude":52.38171624,"longitude":4.80578899,"isASite":true}
+{"latitude":52.38172933,"longitude":4.80645418,"isASite":false}
 {"name":"14. Hoog niveau","description":"Parkrand, Dr H. Colijnstraat","audioNr":14,"image":"hoog_niveau","latitude":52.381495,"longitude":4.806869,"isASite":true}
 {"latitude":52.381368,"longitude":4.806433,"isASite":false}
 {"latitude":52.381032,"longitude":4.806439,"isASite":false}

@@ -96,6 +96,7 @@ public class LocationUpdateService extends Service {
 
 			double closest = 90000;
 			String name = "";
+			int counter = 1;
 			for (Site site : LocationStore.getInstance().getSites()) {
 				double dist = distFrom(myLocation, site);
 				if (dist < closest) {
@@ -113,9 +114,9 @@ public class LocationUpdateService extends Service {
 					if (ApplicationStatus.isActivityVisible()) {
 						final AlertDialog alertDialog = new AlertDialog.Builder(
 								ApplicationStatus.getLastContext()).create();
-						alertDialog.setTitle("Site");
-						alertDialog.setMessage("U bent vlakbij "
-								+ site.getName());
+						alertDialog.setTitle("");
+						alertDialog.setMessage("Je bent bij een luisterplek!"
+								+ counter + ". " + site.getName());
 						alertDialog.setButton("Ok",
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
@@ -133,7 +134,7 @@ public class LocationUpdateService extends Service {
 						createNewLocationNotifi(site.getName(), l);
 					}
 				}
-
+				counter++;
 			}
 //			 Toast.makeText(ApplicationStatus.getLastContext(),
 //			 "Dichtbijzijnde: " + name +" op " + closest + "m",
