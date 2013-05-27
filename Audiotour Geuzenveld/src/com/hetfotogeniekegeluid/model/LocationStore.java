@@ -1,24 +1,28 @@
 package com.hetfotogeniekegeluid.model;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 
 import com.google.gson.Gson;
 
+
+/**
+ * A store for all the location objects.
+ * @author Casper
+ *
+ */
 public class LocationStore {
+	// The locations
 	private ArrayList<Location> locations;
+	// The sites
 	private ArrayList<Site> sites;
+	// The singleton object
 	private static LocationStore locationStore;
 
 	private LocationStore() {
@@ -90,6 +94,12 @@ public class LocationStore {
 		return locations;
 	}
 
+	/**
+	 * Find a site in the store with a latitude and a longitude.
+	 * @param latitude of the site
+	 * @param longitude of the site
+	 * @return the site, null if no site was found
+	 */
 	public Site findSite(double latitude, double longitude) {
 		for(Site s: sites){
 			if(s.getLatitude() == latitude && s.getLongitude() == s.getLongitude()){

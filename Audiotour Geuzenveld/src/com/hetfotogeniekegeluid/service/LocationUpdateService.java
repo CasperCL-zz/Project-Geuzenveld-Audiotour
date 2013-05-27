@@ -1,18 +1,10 @@
 package com.hetfotogeniekegeluid.service;
 
-import com.hetfotogeniekegeluid.R;
-import com.hetfotogeniekegeluid.activity.MapActivity;
-import com.hetfotogeniekegeluid.model.ApplicationStatus;
-import com.hetfotogeniekegeluid.model.LocationStore;
-import com.hetfotogeniekegeluid.model.Site;
-
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,14 +14,18 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.hetfotogeniekegeluid.R;
+import com.hetfotogeniekegeluid.activity.MapActivity;
+import com.hetfotogeniekegeluid.model.ApplicationStatus;
+import com.hetfotogeniekegeluid.model.LocationStore;
+import com.hetfotogeniekegeluid.model.Site;
 
 public class LocationUpdateService extends Service {
 
-	private static final String TAG = "Audiotour_LocationService";
+	// The service binder
 	private final IBinder mBinder = new LocalBinder();
 
 	public class LocalBinder extends Binder {
@@ -66,43 +62,28 @@ public class LocationUpdateService extends Service {
 				listener);
 	}
 
+	/**
+	 * The location listener.
+	 */
 	private final LocationListener listener = new LocationListener() {
 
+		/**
+		 * Called when the user changes from location.
+		 */
 		@Override
 		public void onLocationChanged(Location myLocation) {
-			Log.w("DEBUG", "Location changed: " + myLocation.getLatitude()
-					+ ", " + myLocation.getLongitude());
-			// if (ApplicationStatus.isActivityVisible()) {
-			// final AlertDialog alertDialog = new AlertDialog.Builder(
-			// ApplicationStatus.getLastContext()).create();
-			// alertDialog.setTitle("Site");
-			// alertDialog.setMessage("U bent vlakbij "
-			// + LocationStore.getInstance().getSite(0).getName());
-			// alertDialog.setButton("Ja",
-			// new DialogInterface.OnClickListener() {
-			// public void onClick(DialogInterface dialog,
-			// int which) {
-			// alertDialog.dismiss();
-			// }
-			// });
-			// alertDialog.show();
-			// } else {
-			// Site s = LocationStore.getInstance().getSite(0);
-			// Location tmp = new Location(s.getName());
-			// tmp.setLatitude(s.getLatitude());
-			// tmp.setLongitude(s.getLongitude());
-			// createNewLocationNotifi(s.getName(), tmp);
-			// }
-
+			
 			double closest = 90000;
-			String name = "";
 			int counter = 1;
+			// Go over every site and determine which is the closest to the user.
 			for (Site site : LocationStore.getInstance().getSites()) {
+				// Calculate the distance
 				double dist = distFrom(myLocation, site);
 				if (dist < closest) {
 					closest = dist;
-					name = site.getName();
 				}
+				
+				// If the distance is smaller than 30 meters and it has not been visited before
 				if (dist < 30 && !site.isVisited()) { // 20 meters near a
 														// site and not
 														// visited (this
@@ -110,7 +91,7 @@ public class LocationUpdateService extends Service {
 
 					site.setVisited(true);
 
-					// Show a popup when in app; else create a notification
+					// Show a popup when in app
 					if (ApplicationStatus.isActivityVisible()) {
 						final AlertDialog alertDialog = new AlertDialog.Builder(
 								ApplicationStatus.getLastContext()).create();
@@ -125,7 +106,7 @@ public class LocationUpdateService extends Service {
 									}
 								});
 						alertDialog.show();
-					} else {
+					} else { // create a notification
 						Location l = new Location(site.getName());
 						l.setLatitude(site.getLatitude());
 						l.setLongitude(site.getLongitude());
@@ -136,9 +117,6 @@ public class LocationUpdateService extends Service {
 				}
 				counter++;
 			}
-//			 Toast.makeText(ApplicationStatus.getLastContext(),
-//			 "Dichtbijzijnde: " + name +" op " + closest + "m",
-//			 Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -161,18 +139,6 @@ public class LocationUpdateService extends Service {
 
 	};
 
-	public static boolean isRunning(Context c) {
-		ActivityManager manager = (ActivityManager) c
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE)) {
-			if (LocationUpdateService.class.getName().equals(
-					service.service.getClassName())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public double distFrom(Location location1,
 			com.hetfotogeniekegeluid.model.Location loc) {
@@ -197,7 +163,12 @@ public class LocationUpdateService extends Service {
 		return (dist * meterConversion);
 	}
 
-	private void createNewLocationNotifi(String string, Location location) {
+	/**
+	 * Creates a notification for the user, linked to a specific zoom location for the MapActivity.
+	 * @param siteName the name of the site
+	 * @param location  of the site
+	 */
+	private void createNewLocationNotifi(String siteName, Location location) {
 		// Prepare intent which is triggered if the
 		// notification is selected
 
@@ -210,14 +181,14 @@ public class LocationUpdateService extends Service {
 		// Build notification
 		// Actions are just fake
 		Notification noti = new NotificationCompat.Builder(this)
-				.setContentTitle("Audiotour: " + string)
-				.setContentText("U bent in de buurt van een punt " + string)
+				.setContentTitle("Audiotour: " + siteName)
+				.setContentText("U bent in de buurt van een punt " + siteName)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(pIntent)
 				.setStyle(
 						new NotificationCompat.BigTextStyle()
 								.bigText("U bent in de buurt van "
-										+ string
+										+ siteName
 										+ ". Open de app om het fragment af te spelen."))
 				.setDefaults(
 						Notification.DEFAULT_SOUND

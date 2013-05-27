@@ -1,21 +1,15 @@
 package com.hetfotogeniekegeluid.service;
 
-import com.hetfotogeniekegeluid.R;
-
-import android.app.ActivityManager;
 import android.app.Service;
-import android.app.ActivityManager.RunningServiceInfo;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+
+import com.hetfotogeniekegeluid.R;
 
 public class AudioService extends Service {
-	private static final String TAG = "Audiotour_AudioService";
+	// The service binder
 	private final IBinder mBinder = new LocalBinder();
 	// Object that allows us to bind the service to an activity
 	private int fileNr = 1;
