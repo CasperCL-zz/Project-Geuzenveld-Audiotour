@@ -17,33 +17,43 @@ import android.widget.Toast;
 public class AudioService extends Service {
 	private static final String TAG = "Audiotour_AudioService";
 	private final IBinder mBinder = new LocalBinder();
+	// Object that allows us to bind the service to an activity
 	private int fileNr = 1;
+	// Tells the media player what file to use
 	private MediaPlayer player;
-	private String currentTrackName;
+	// The media player
+	private String trackName;
 
+	// The name of the audio file
+
+	// Class for clients to access
 	public class LocalBinder extends Binder {
 
 		public AudioService getService() {
-			// Return this instance of LocalService so clients can call public
+			// Return this instance of AudioService so clients can call public
 			// methods
 			return AudioService.this;
 		}
 	}
 
+	// Function that returns the IBinder, so activities can bind to the service
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
 
+	// This function is called when the service is initialized
 	@Override
 	public void onCreate() {
 		makePlayer();
-		player.setLooping(false); // Set looping
+		// Create the media player
+		player.setLooping(false);
+		// Set looping
 	}
 
 	@Override
 	public void onDestroy() {
-		//player.stop();
+		player.stop();
 	}
 
 	@Override
@@ -51,10 +61,12 @@ public class AudioService extends Service {
 
 	}
 
+	// Function that sets the track number
 	public void setFileNr(int fileNr) {
 		this.fileNr = fileNr;
 	}
 
+	// Function that Plays/Pauses the media player
 	public void startstopAudio() {
 		if (player.isPlaying()) {
 			player.pause();
@@ -63,93 +75,100 @@ public class AudioService extends Service {
 		}
 	}
 
+	// Function that explicitly pauses the audio
 	public void pauseAudio() {
 		if (player == null)
 			return;
 		player.pause();
 	}
 
+	// Function that creates the audio player
 	public void makePlayer() {
-		if (player != null) {
+		//If needed, stop the player and empty it
+		if (!checkNull()) {
 			player.stop();
 			player = null;
 		}
+		//Set the file and trackname, based on the fileNr
 		switch (fileNr) {
 		case 1:
 			player = MediaPlayer.create(this, R.raw.file1);
-			currentTrackName = "1: Op Weg ";
+			trackName = "1: Op Weg ";
 			break;
+
 		case 2:
 			player = MediaPlayer.create(this, R.raw.file2);
-			currentTrackName = "2: Hart van Geuzenveld ";
+			trackName = "2: Hart van Geuzenveld ";
 			break;
 		case 3:
 			player = MediaPlayer.create(this, R.raw.file3);
-			currentTrackName = "3: Leven in een Bouwput ";
+			trackName = "3: Leven in een Bouwput ";
 			break;
 		case 4:
 			player = MediaPlayer.create(this, R.raw.file4);
-			currentTrackName = "4: De eerste jaren ";
+			trackName = "4: De eerste jaren ";
 			break;
 		case 5:
 			player = MediaPlayer.create(this, R.raw.file5);
-			currentTrackName = "5: Smeltkroes ";
+			trackName = "5: Smeltkroes ";
 			break;
 		case 6:
 			player = MediaPlayer.create(this, R.raw.file6);
-			currentTrackName = "6: Verzet tegen sloop ";
+			trackName = "6: Verzet tegen sloop ";
 			break;
 		case 7:
 			player = MediaPlayer.create(this, R.raw.file7);
-			currentTrackName = "7: Nieuwe Tijden ";
+			trackName = "7: Nieuwe Tijden ";
 			break;
 		case 8:
 			player = MediaPlayer.create(this, R.raw.file8);
-			currentTrackName = "8: Voetbaldromen ";
+			trackName = "8: Voetbaldromen ";
 			break;
 		case 9:
 			player = MediaPlayer.create(this, R.raw.file9);
-			currentTrackName = "9: Roomse inslag ";
+			trackName = "9: Roomse inslag ";
 			break;
 		case 10:
 			player = MediaPlayer.create(this, R.raw.file10);
-			currentTrackName = "10: Leren wonen ";
+			trackName = "10: Leren wonen ";
 			break;
 		case 11:
 			player = MediaPlayer.create(this, R.raw.file11);
-			currentTrackName = "11: Geuzennaam ";
+			trackName = "11: Geuzennaam ";
 			break;
 		case 12:
 			player = MediaPlayer.create(this, R.raw.file12);
-			currentTrackName = "12: Kunstgreep ";
+			trackName = "12: Kunstgreep ";
 			break;
 		case 13:
 			player = MediaPlayer.create(this, R.raw.file13);
-			currentTrackName = "13: Bakkie troost ";
+			trackName = "13: Bakkie troost ";
 			break;
 		case 14:
 			player = MediaPlayer.create(this, R.raw.file14);
-			currentTrackName = "14: Hoog niveau ";
+			trackName = "14: Hoog niveau ";
 			break;
 		case 15:
 			player = MediaPlayer.create(this, R.raw.file15);
-			currentTrackName = "15: Naar huis ";
+			trackName = "15: Naar huis ";
 			break;
 
 		}
 
 	}
-
+	// Returns the current track name
 	public String getCurrentTrackName() {
-		return currentTrackName;
+		return trackName;
 	}
 
+	//Checks if the audio is playing or not
 	public boolean checkPlaying() {
 		if (player == null)
 			return false;
 		return player.isPlaying();
 	}
 
+	//Checks if the player is null or not
 	public boolean checkNull() {
 		if (player == null) {
 			return true;
@@ -158,37 +177,25 @@ public class AudioService extends Service {
 		}
 	}
 
+	//Get the position of the media player
 	public int getPos() {
 		if (player == null)
 			return 0;
 		return player.getCurrentPosition();
 	}
 
+	//Set the position of the media player
 	public void setPos(int pos) {
 		if (player == null)
 			return;
 		player.seekTo(pos);
 	}
 
+	//Get the duration of the current track
 	public int getDur() {
 		if (player == null)
 			return 0;
 		return player.getDuration();
-	}
-
-	public static RunningServiceInfo isRunning(Context c) {
-		ActivityManager manager = (ActivityManager) c
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE)) {
-			if (AudioService.class.getName().equals(
-					service.service.getClassName())) {
-				Log.w("DEBUG", "SERVICE RUNNING");
-				return service;
-			}
-		}
-		Log.w("DEBUG", "SERVICE NOT RUNNING");
-		return null;
 	}
 
 }
