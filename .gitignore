@@ -19,6 +19,8 @@ local.properties
 .classpath
 .project
 
+# keystores should not be public
+*.keystore
 
 file2.mp3
 file3.mp3
