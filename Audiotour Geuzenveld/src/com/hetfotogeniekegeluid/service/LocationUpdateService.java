@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import com.hetfotogeniekegeluid.R;
 import com.hetfotogeniekegeluid.activity.MapActivity;
@@ -96,7 +98,7 @@ public class LocationUpdateService extends Service {
 						final AlertDialog alertDialog = new AlertDialog.Builder(
 								ApplicationStatus.getLastContext()).create();
 						alertDialog.setTitle("");
-						alertDialog.setMessage("Je bent bij een luisterplek!"
+						alertDialog.setMessage("Je bent bij een luisterplek!\n"
 								+ counter + ". " + site.getName());
 						alertDialog.setButton("Ok",
 								new DialogInterface.OnClickListener() {
@@ -105,13 +107,13 @@ public class LocationUpdateService extends Service {
 										alertDialog.dismiss();
 									}
 								});
+						TextView messageText = (TextView) alertDialog.findViewById(android.R.id.message);
+						messageText.setGravity(Gravity.CENTER);
 						alertDialog.show();
 					} else { // create a notification
 						Location l = new Location(site.getName());
 						l.setLatitude(site.getLatitude());
 						l.setLongitude(site.getLongitude());
-						Log.w("LUS", site.getName() + ": " + l.getLatitude()
-								+ ", " + l.getLongitude());
 						createNewLocationNotifi(site.getName(), l);
 					}
 				}

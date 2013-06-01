@@ -164,11 +164,7 @@ public class AudioService extends Service {
 
 	//Checks if the player is null or not
 	public boolean checkNull() {
-		if (player == null) {
-			return true;
-		} else {
-			return false;
-		}
+		return (player == null ? true : false);
 	}
 
 	//Get the position of the media player

@@ -1,5 +1,7 @@
 package com.hetfotogeniekegeluid.model;
 
+import android.util.Log;
+
 /**
  * A site where the user of the application can listen to audio and watch a picture.
  * @author Casper
@@ -45,12 +47,12 @@ public class Site extends Location {
 	}
 
 	/**
-	 * Used to read the JSON in objects.
+	 * Used to read/write the JSON in objects.
 	 */
 	@Override
 	public String toString() {
-		return "Site [name=" + name + ", description=" + description
-				+ "latitude=" + getLatitude() + ", longitude=" + getLongitude()
+		return "Site [name=" + name + ",description=" + description + ",audioNr=" + audioFileNr 
+				+ ",latitude=" + getLatitude() + ",longitude=" + getLongitude() 
 				+ "]";
 	}
 

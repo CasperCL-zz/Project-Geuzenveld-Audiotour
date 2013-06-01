@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -259,6 +260,7 @@ public class MapActivity extends FragmentActivity implements
 		map.setOnMarkerClickListener(this);
 
 		locationStore = LocationStore.getInstance();
+		locationStore.loadLocationStore(this);
 
 		createMarkers();
 		createRoute();
@@ -581,7 +583,7 @@ public class MapActivity extends FragmentActivity implements
 					public void onClick(View v) {
 						if (!barVisible)
 							addremoveBar();
-						myAudioService.setFileNr(site.getAudioFileNr());
+						myAudioService.setFileNr(locationStore.getSites().indexOf(site) + 1);
 						myAudioService.makePlayer();
 						// popupWindow.dismiss();
 						audioStart(v);

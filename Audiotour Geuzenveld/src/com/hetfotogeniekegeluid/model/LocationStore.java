@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -51,8 +52,9 @@ public class LocationStore {
 				tmpSite = gson.fromJson(in, Site.class);
 
 				// If it is a location, mark it for setting the marker later on
-				if (tmpSite.isASite())
+				if (tmpSite.isASite()) {
 					sites.add(tmpSite);
+				}
 				// Add the Location (which can also be a Site) to the locations
 				// list so a route can be drawn.
 				locations.add(tmpSite);

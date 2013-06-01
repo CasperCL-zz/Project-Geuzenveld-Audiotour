@@ -36,6 +36,7 @@ public class Location {
 	public Location(double latitude, double longitude, boolean isASite) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.isASite = isASite;
 	}
 
 	public double getLatitude() {

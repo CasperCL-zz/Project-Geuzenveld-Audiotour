@@ -36,7 +36,7 @@ public class DelenActivity extends Activity {
 		// Create a new Intent that we can send to another person (as a message)
 		sharingIntent.setType("text/plain");
 		// Tell the intent that we are sending text
-		String shareBody = "Neem een audiotour door het prachtige Geuzenveld met deze handige app!";
+		String shareBody = "Beleef de audiotour door het prachtige Geuzenveld met deze handige app!";
 		// This holds the actual text we are sending
 		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 				"Het gevoel van Geuzenveld");
