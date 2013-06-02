@@ -1,12 +1,21 @@
 package com.hetfotogeniekegeluid.service;
 
+import java.io.File;
+
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
+import android.os.storage.StorageManager;
+import android.util.Log;
 
 import com.hetfotogeniekegeluid.R;
+import com.hetfotogeniekegeluid.model.ObbExpansionsManager;
+import com.hetfotogeniekegeluid.model.ObbExpansionsManager.ObbListener;
 
 public class AudioService extends Service {
 	// The service binder
@@ -39,8 +48,8 @@ public class AudioService extends Service {
 	// This function is called when the service is initialized
 	@Override
 	public void onCreate() {
-		makePlayer();
 		// Create the media player
+		makePlayer();
 		player.setLooping(false);
 		// Set looping
 	}
@@ -83,105 +92,127 @@ public class AudioService extends Service {
 			player.stop();
 			player = null;
 		}
+		
+		ObbExpansionsManager oeManager = ObbExpansionsManager.getInstance();
+//		Log.w("DEBUG", "The file root: "+ oeManager.getMainRoot());
+		if(oeManager == null)
+			 return;
+				
 		//Set the file and trackname, based on the fileNr
 		switch (fileNr) {
 		case 1:
-			player = MediaPlayer.create(this, R.raw.file1);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+					oeManager.getMainRoot() + "/1.mp3")));
 			trackName = "1: Op Weg ";
 			break;
 
 		case 2:
-			player = MediaPlayer.create(this, R.raw.file2);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+					oeManager.getMainRoot() + "/2.mp3")));
 			trackName = "2: Hart van Geuzenveld ";
 			break;
 		case 3:
-			player = MediaPlayer.create(this, R.raw.file3);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/3.mp3")));
 			trackName = "3: Leven in een Bouwput ";
 			break;
 		case 4:
-			player = MediaPlayer.create(this, R.raw.file4);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/4.mp3")));
 			trackName = "4: De eerste jaren ";
 			break;
 		case 5:
-			player = MediaPlayer.create(this, R.raw.file5);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/5.mp3")));
 			trackName = "5: Smeltkroes ";
 			break;
 		case 6:
-			player = MediaPlayer.create(this, R.raw.file6);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/6.mp3")));
 			trackName = "6: Verzet tegen sloop ";
 			break;
 		case 7:
-			player = MediaPlayer.create(this, R.raw.file7);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/7.mp3")));
 			trackName = "7: Nieuwe Tijden ";
 			break;
 		case 8:
-			player = MediaPlayer.create(this, R.raw.file8);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/8.mp3")));
 			trackName = "8: Voetbaldromen ";
 			break;
 		case 9:
-			player = MediaPlayer.create(this, R.raw.file9);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/9.mp3")));
 			trackName = "9: Roomse inslag ";
 			break;
 		case 10:
-			player = MediaPlayer.create(this, R.raw.file10);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/10.mp3")));
 			trackName = "10: Leren wonen ";
 			break;
 		case 11:
-			player = MediaPlayer.create(this, R.raw.file11);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/11.mp3")));
 			trackName = "11: Geuzennaam ";
 			break;
 		case 12:
-			player = MediaPlayer.create(this, R.raw.file12);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/12.mp3")));
 			trackName = "12: Kunstgreep ";
 			break;
 		case 13:
-			player = MediaPlayer.create(this, R.raw.file13);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/13.mp3")));
 			trackName = "13: Bakkie troost ";
 			break;
 		case 14:
-			player = MediaPlayer.create(this, R.raw.file14);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/14.mp3")));
 			trackName = "14: Hoog niveau ";
 			break;
 		case 15:
-			player = MediaPlayer.create(this, R.raw.file15);
+			player = MediaPlayer.create(this, Uri.fromFile(new File(
+			        oeManager.getMainRoot() + "/15.mp3")));
 			trackName = "15: Naar huis ";
 			break;
 
 		}
 
 	}
+
 	// Returns the current track name
 	public String getCurrentTrackName() {
 		return trackName;
 	}
 
-	//Checks if the audio is playing or not
+	// Checks if the audio is playing or not
 	public boolean checkPlaying() {
 		if (player == null)
 			return false;
 		return player.isPlaying();
 	}
 
-	//Checks if the player is null or not
+	// Checks if the player is null or not
 	public boolean checkNull() {
 		return (player == null ? true : false);
 	}
 
-	//Get the position of the media player
+	// Get the position of the media player
 	public int getPos() {
 		if (player == null)
 			return 0;
 		return player.getCurrentPosition();
 	}
 
-	//Set the position of the media player
+	// Set the position of the media player
 	public void setPos(int pos) {
 		if (player == null)
 			return;
 		player.seekTo(pos);
 	}
 
-	//Get the duration of the current track
+	// Get the duration of the current track
 	public int getDur() {
 		if (player == null)
 			return 0;

@@ -20,7 +20,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="TextView"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF" 
+            android:textSize="@dimen/text"/>
 
         <ImageView
             android:id="@+id/imagePopupPlay"

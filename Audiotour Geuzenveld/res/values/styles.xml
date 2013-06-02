@@ -16,5 +16,6 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    <string name="DownloadTextTop">Om u een mooie audiotour te doen laten beleven moeten de audiobestanden gedownload worden..</string>
 
 </resources>
