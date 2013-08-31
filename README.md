@@ -1,4 +1,4 @@
-Android-Development
+Project Geuzenveld Audiotour
 ===================
 
-Android Projects will we located here
+Android application to explore Geuzenveld, one of the many districts in Amsterdam
